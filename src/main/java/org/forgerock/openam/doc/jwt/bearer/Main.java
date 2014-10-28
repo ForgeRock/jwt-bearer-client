@@ -20,7 +20,6 @@ import org.forgerock.json.fluent.JsonValue;
 import org.forgerock.json.jose.jws.JwsAlgorithm;
 import org.forgerock.json.jose.jws.handlers.RSASigningHandler;
 import org.forgerock.util.SignatureUtil;
-import org.forgerock.util.encode.Base64;
 import org.forgerock.util.encode.Base64url;
 
 import java.io.BufferedReader;
