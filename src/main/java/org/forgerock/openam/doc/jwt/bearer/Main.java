@@ -57,7 +57,7 @@ public final class Main {
         serverUrl = args[0];
 
         String idToken = getIdToken(getEncodedHeaders(), getEncodedClaims(serverUrl));
-        System.out.println("POSTing the following as a JWT bearer token:\n" + idToken);
+        System.out.println("\nPOSTing the following as a JWT bearer token:\n" + idToken);
         System.out.println();
 
         try {
@@ -99,7 +99,10 @@ public final class Main {
     private static String getEncodedHeaders() {
         HashMap<String, String> headers = new HashMap<String, String>();
         headers.put("alg", "RS256");
-        return Base64url.encode(new JsonValue(headers).toString().getBytes());
+
+        String headersAsJson = new JsonValue(headers).toString();
+        System.out.println("Headers:\n" +  headersAsJson);
+        return Base64url.encode(headersAsJson.getBytes());
     }
 
     private static String getEncodedClaims(String aud) {
@@ -108,13 +111,18 @@ public final class Main {
         claims.put("sub", clientId);
         claims.put("aud", aud);
         claims.put("exp", Long.toString(System.currentTimeMillis() / 1000) + 600);
-        return Base64url.encode(new JsonValue(claims).toString().getBytes());
+
+        String claimsAsJson = new JsonValue(claims).toString();
+        System.out.println("Claims:\n" + claimsAsJson);
+        return Base64url.encode(claimsAsJson.getBytes());
     }
 
     private static String getIdToken(String header, String claims) {
         SignatureUtil signatureUtil = SignatureUtil.getInstance();
         RSASigningHandler rsaSigningHandler = new RSASigningHandler(getPrivateKey(), signatureUtil);
+
         String signature = Base64url.encode(rsaSigningHandler.sign(JwsAlgorithm.RS256, header + "." + claims));
+        System.out.println("Signature:\n" + signature);
         return header + "." + claims + "." + signature;
     }
 
@@ -147,8 +155,10 @@ public final class Main {
 
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+/*      Signed JWT serves to authenticate.
         connection.setRequestProperty("Authorization",
                 "Basic " + Base64.encode((clientId + ":" + password).getBytes()));
+*/
         connection.setDoOutput(true);
 
         DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
