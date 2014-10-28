@@ -20,6 +20,7 @@ import org.forgerock.json.fluent.JsonValue;
 import org.forgerock.json.jose.jws.JwsAlgorithm;
 import org.forgerock.json.jose.jws.handlers.RSASigningHandler;
 import org.forgerock.util.SignatureUtil;
+import org.forgerock.util.encode.Base64;
 import org.forgerock.util.encode.Base64url;
 
 import java.io.BufferedReader;
@@ -37,8 +38,9 @@ import java.util.HashMap;
  */
 public final class Main {
 
-    private static String clientId = "jwt-bearer-client";
-    private static String serverUrl = null;
+    private static String clientId     = "jwt-bearer-client";
+    private static String clientSecret = "password";
+    private static String serverUrl    = null;
 
     /**
      * Use a JWT as a bearer token to get an OAuth 2.0 access token.
@@ -84,7 +86,6 @@ public final class Main {
                 + "TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8\n"
                 + "-----END CERTIFICATE-----";
 
-        String clientSecret = "password";
         return "Before trying this client, "
                 + "configure a top-level realm OAuth 2.0 client profile\n"
                 + "with client_id: " + clientId + ", "
@@ -154,10 +155,9 @@ public final class Main {
 
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-/*      Auth not needed: Signed JWT serves to authenticate.
+        // Is Basic Auth needed? Or does signed JWT serve to authenticate.
         connection.setRequestProperty("Authorization",
                 "Basic " + Base64.encode((clientId + ":" + clientSecret).getBytes()));
-*/
         connection.setDoOutput(true);
 
         DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
