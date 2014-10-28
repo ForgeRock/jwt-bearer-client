@@ -38,7 +38,6 @@ import java.util.HashMap;
 public final class Main {
 
     private static String clientId = "jwt-bearer-client";
-    private static String password = "password";
     private static String serverUrl = null;
 
     /**
@@ -85,10 +84,11 @@ public final class Main {
                 + "TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8\n"
                 + "-----END CERTIFICATE-----";
 
+        String clientSecret = "password";
         return "Before trying this client, "
                 + "configure a top-level realm OAuth 2.0 client profile\n"
                 + "with client_id: " + clientId + ", "
-                + "client_secret: " + password + ",\n"
+                + "client_secret: " + clientSecret + ",\n"
                 + "and Client JWT Bearer Public Key:\n\n" + certificate
                 + "\n\n"
                 + "Then to use this client, pass it the OpenAM Server URL\n"
@@ -154,9 +154,9 @@ public final class Main {
 
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-/*      Signed JWT serves to authenticate.
+/*      Auth not needed: Signed JWT serves to authenticate.
         connection.setRequestProperty("Authorization",
-                "Basic " + Base64.encode((clientId + ":" + password).getBytes()));
+                "Basic " + Base64.encode((clientId + ":" + clientSecret).getBytes()));
 */
         connection.setDoOutput(true);
 
