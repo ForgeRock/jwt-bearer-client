@@ -16,12 +16,10 @@
 
 package org.forgerock.openam.doc.jwt.bearer;
 
-import org.forgerock.json.fluent.JsonValue;
+import org.forgerock.json.jose.builders.JwtBuilderFactory;
 import org.forgerock.json.jose.jws.JwsAlgorithm;
-import org.forgerock.json.jose.jws.handlers.RSASigningHandler;
-import org.forgerock.util.SignatureUtil;
+import org.forgerock.json.jose.jws.SigningManager;
 import org.forgerock.util.encode.Base64;
-import org.forgerock.util.encode.Base64url;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -31,7 +29,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.security.KeyStore;
 import java.security.PrivateKey;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Date;
 
 /**
  * Use a JWT as a bearer token to get an OAuth 2.0 access token.
@@ -45,7 +44,7 @@ public final class Main {
     /**
      * Use a JWT as a bearer token to get an OAuth 2.0 access token.
      *
-     * @param args Command line arguments: OpenAM-Url
+     * @param args Command line arguments: OpenAM-serverUrl
      */
     public static void main(String[] args) {
 
@@ -56,12 +55,12 @@ public final class Main {
 
         serverUrl = args[0];
 
-        String idToken = getIdToken(getEncodedHeaders(), getEncodedClaims(serverUrl));
-        System.out.println("\nPOSTing the following as a JWT bearer token:\n" + idToken);
+        String jws = getJws(serverUrl);
+        System.out.println("\nPOSTing the following as a JWT bearer token:\n" + jws);
         System.out.println();
 
         try {
-            post(idToken);
+            post(jws);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
@@ -69,7 +68,7 @@ public final class Main {
     }
 
     private static String getUsage() {
-        String certificate = "-----BEGIN CERTIFICATE-----\n"
+        String certificate = "-----BEGIN PUBLIC KEY-----\n"
                 + "MIIDETCCAfmgAwIBAgIEU8SXLjANBgkqhkiG9w0BAQsFADA5MRswGQYDVQQKExJvcGVuYW0uZXhh\n"
                 + "bXBsZS5jb20xGjAYBgNVBAMTEWp3dC1iZWFyZXItY2xpZW50MB4XDTE0MTAyNzExNTY1NloXDTI0\n"
                 + "MTAyNDExNTY1NlowOTEbMBkGA1UEChMSb3BlbmFtLmV4YW1wbGUuY29tMRowGAYDVQQDExFqd3Qt\n"
@@ -84,9 +83,10 @@ public final class Main {
                 + "qA6mwDYPAZSbm5cDVvCR7Lt6VqJ+D0V8GABFxUw9IaX6ajTqkWhldY77usvNeTD0Xc4R7OqSBrnA\n"
                 + "SNCaUlJogWyzhbFlmE9Ne28j4RVpbz/EZn0oc/cHTJ6Lryzsivf4uDO1m3M3kM/MUyXc1Zv3rqBj\n"
                 + "TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8\n"
-                + "-----END CERTIFICATE-----";
+                + "-----END PUBLIC KEY-----";
 
-        return "Before trying this client, "
+        return "Usage: OpenAM-serverUrl\n\n"
+                + "Before trying this client, "
                 + "configure a top-level realm OAuth 2.0 client profile\n"
                 + "with client_id: " + clientId + ", "
                 + "client_secret: " + clientSecret + ",\n"
@@ -96,34 +96,22 @@ public final class Main {
                 + "such as http://openam.example.com:8080/openam";
     }
 
-    private static String getEncodedHeaders() {
-        HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("alg", "RS256");
+    private static String getJws(String aud) {
+        Date exp = new Date(System.currentTimeMillis() + 1000 * 60 * 10);
+        Date nbf = new Date(System.currentTimeMillis() - 1000 * 60 * 10);
 
-        String headersAsJson = new JsonValue(headers).toString();
-        System.out.println("Headers:\n" +  headersAsJson);
-        return Base64url.encode(headersAsJson.getBytes());
-    }
-
-    private static String getEncodedClaims(String aud) {
-        HashMap<String, String> claims = new HashMap<String, String>();
-        claims.put("iss", clientId);
-        claims.put("sub", clientId);
-        claims.put("aud", aud);
-        claims.put("exp", Long.toString(System.currentTimeMillis() / 1000) + 600);
-
-        String claimsAsJson = new JsonValue(claims).toString();
-        System.out.println("Claims:\n" + claimsAsJson);
-        return Base64url.encode(claimsAsJson.getBytes());
-    }
-
-    private static String getIdToken(String header, String claims) {
-        SignatureUtil signatureUtil = SignatureUtil.getInstance();
-        RSASigningHandler rsaSigningHandler = new RSASigningHandler(getPrivateKey(), signatureUtil);
-
-        String signature = Base64url.encode(rsaSigningHandler.sign(JwsAlgorithm.RS256, header + "." + claims));
-        System.out.println("Signature:\n" + signature);
-        return header + "." + claims + "." + signature;
+        JwtBuilderFactory jwtBuilderFactory = new JwtBuilderFactory();
+        return jwtBuilderFactory.jws(
+                new SigningManager().newRsaSigningHandler(getPrivateKey()))
+                .headers().alg(JwsAlgorithm.RS256).done()
+                .claims(jwtBuilderFactory.claims()
+                        .iss(clientId)
+                        .sub(clientId)
+                        .aud(Collections.singletonList(aud))
+                        .exp(exp)
+                        .nbf(nbf)
+                        .build())
+                .build();
     }
 
     private static PrivateKey getPrivateKey() {
@@ -155,7 +143,9 @@ public final class Main {
 
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        // Is Basic Auth needed? Or does signed JWT serve to authenticate.
+
+        // This client is of type confidential, so authentication is required
+        // according to http://tools.ietf.org/html/rfc6749#section-3.2.1
         connection.setRequestProperty("Authorization",
                 "Basic " + Base64.encode((clientId + ":" + clientSecret).getBytes()));
         connection.setDoOutput(true);

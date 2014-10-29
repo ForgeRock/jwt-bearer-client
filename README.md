@@ -6,7 +6,7 @@ Before trying this client, configure a top-level realm OAuth 2.0 client profile
 with client_id: `jwt-bearer-client`, client_secret: `password`,
 and Client JWT Bearer Public Key:
 
-    -----BEGIN CERTIFICATE-----
+    -----BEGIN PUBLIC KEY-----
     MIIDETCCAfmgAwIBAgIEU8SXLjANBgkqhkiG9w0BAQsFADA5MRswGQYDVQQKExJvcGVuYW0uZXhh
     bXBsZS5jb20xGjAYBgNVBAMTEWp3dC1iZWFyZXItY2xpZW50MB4XDTE0MTAyNzExNTY1NloXDTI0
     MTAyNDExNTY1NlowOTEbMBkGA1UEChMSb3BlbmFtLmV4YW1wbGUuY29tMRowGAYDVQQDExFqd3Qt
@@ -21,12 +21,20 @@ and Client JWT Bearer Public Key:
     qA6mwDYPAZSbm5cDVvCR7Lt6VqJ+D0V8GABFxUw9IaX6ajTqkWhldY77usvNeTD0Xc4R7OqSBrnA
     SNCaUlJogWyzhbFlmE9Ne28j4RVpbz/EZn0oc/cHTJ6Lryzsivf4uDO1m3M3kM/MUyXc1Zv3rqBj
     TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8
-    -----END CERTIFICATE-----
+    -----END PUBLIC KEY-----
 
 Then to use this client, pass it the OpenAM Server URL
 such as `http://openam.example.com:8080/openam`.
 
-* * * * *
+Notice that the header and footer for the Client JWT Bearer Public Key value
+is different from the output of the Java `keytool` command.
+The `keytool` command uses
+`-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----`,
+but in the configuration you use
+`-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----`.
+
+
+## Commands Used to Create the Key Pair
 
 The Java `keytool` command created the key pair for this sample client.
 
