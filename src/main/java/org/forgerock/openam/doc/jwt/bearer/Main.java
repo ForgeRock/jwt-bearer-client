@@ -68,21 +68,14 @@ public final class Main {
     }
 
     private static String getUsage() {
-        String certificate = "-----BEGIN PUBLIC KEY-----\n"
-                + "MIIDETCCAfmgAwIBAgIEU8SXLjANBgkqhkiG9w0BAQsFADA5MRswGQYDVQQKExJvcGVuYW0uZXhh\n"
-                + "bXBsZS5jb20xGjAYBgNVBAMTEWp3dC1iZWFyZXItY2xpZW50MB4XDTE0MTAyNzExNTY1NloXDTI0\n"
-                + "MTAyNDExNTY1NlowOTEbMBkGA1UEChMSb3BlbmFtLmV4YW1wbGUuY29tMRowGAYDVQQDExFqd3Qt\n"
-                + "YmVhcmVyLWNsaWVudDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAID4ZZ/DIGEBr4QC\n"
-                + "2uz0GYFOCUlAPanxX21aYHSvELsWyMa7DJlD+mnjaF8cPRRMkhYZFXDJo/AVcjyblyT3ntqL+2Js\n"
-                + "3D7TmS6BSjkxZWsJHyhJIYEoUwwloc0kizgSm15MwBMcbnksQVN5VWiOe4y4JMbi30t6k38lM62K\n"
-                + "KtaSPP6jvnW1LTmL9uiqLWz54AM6hU3NlCI3J6Rfh8waBIPAEjmHZNquOl2uGgWumzubYDFJbomL\n"
-                + "SQqO58RuKVaSVMwDbmENtMYWXIKQL2xTt5XAbwEQEgJ/zskwpA2aQt1HE6de3UymOhONhRiu4rk3\n"
-                + "AIEnEVbxrvy4Ik+wXg7LZVsCAwEAAaMhMB8wHQYDVR0OBBYEFIuI7ejuZTg5tJsh1XyRopGOMBcs\n"
-                + "MA0GCSqGSIb3DQEBCwUAA4IBAQBM/+/tYYVIS6LvPl3mfE8V7x+VPXqj/uK6UecAbfmRTrPk1ph+\n"
-                + "jjI6nmLX9ncomYALWL/JFiSXcVsZt3/412fOqjakFVS0PmK1vEPxDlav1drnVA33icy1wORRRu5/\n"
-                + "qA6mwDYPAZSbm5cDVvCR7Lt6VqJ+D0V8GABFxUw9IaX6ajTqkWhldY77usvNeTD0Xc4R7OqSBrnA\n"
-                + "SNCaUlJogWyzhbFlmE9Ne28j4RVpbz/EZn0oc/cHTJ6Lryzsivf4uDO1m3M3kM/MUyXc1Zv3rqBj\n"
-                + "TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8\n"
+        String publicKey = "-----BEGIN PUBLIC KEY-----\n"
+                + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPhln8MgYQGvhALa7PQZ\n"
+                + "gU4JSUA9qfFfbVpgdK8QuxbIxrsMmUP6aeNoXxw9FEySFhkVcMmj8BVyPJuXJPee\n"
+                + "2ov7YmzcPtOZLoFKOTFlawkfKEkhgShTDCWhzSSLOBKbXkzAExxueSxBU3lVaI57\n"
+                + "jLgkxuLfS3qTfyUzrYoq1pI8/qO+dbUtOYv26KotbPngAzqFTc2UIjcnpF+HzBoE\n"
+                + "g8ASOYdk2q46Xa4aBa6bO5tgMUluiYtJCo7nxG4pVpJUzANuYQ20xhZcgpAvbFO3\n"
+                + "lcBvARASAn/OyTCkDZpC3UcTp17dTKY6E42FGK7iuTcAgScRVvGu/LgiT7BeDstl\n"
+                + "WwIDAQAB\n"
                 + "-----END PUBLIC KEY-----";
 
         return "Usage: OpenAM-serverUrl\n\n"
@@ -90,15 +83,17 @@ public final class Main {
                 + "configure a top-level realm OAuth 2.0 client profile\n"
                 + "with client_id: " + clientId + ", "
                 + "client_secret: " + clientSecret + ",\n"
-                + "and Client JWT Bearer Public Key:\n\n" + certificate
+                + "and Client JWT Bearer Public Key:\n\n" + publicKey
                 + "\n\n"
                 + "Then to use this client, pass it the OpenAM Server URL\n"
                 + "such as http://openam.example.com:8080/openam";
     }
 
     private static String getJws(String aud) {
-        Date exp = new Date(System.currentTimeMillis() + 1000 * 60 * 10);
-        Date nbf = new Date(System.currentTimeMillis() - 1000 * 60 * 10);
+        Date exp = new Date(System.currentTimeMillis() + 1000 * 60 * 5);
+
+        // Set not before time in the past due to issue in OpenAM 12.0.0-SNAPSHOT.
+        Date nbf = new Date(System.currentTimeMillis() - 1000 * 60 * 5);
 
         JwtBuilderFactory jwtBuilderFactory = new JwtBuilderFactory();
         return jwtBuilderFactory.jws(
@@ -156,16 +151,24 @@ public final class Main {
         dataOutputStream.close();
 
         int responseCode = connection.getResponseCode();
-        BufferedReader input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+
+        BufferedReader input;
         if (responseCode == 200) {
             input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        } else {
+            input = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
         }
+
         StringBuilder response = new StringBuilder();
-        String line;
-        while ((line = input.readLine()) != null) {
-            response.append(line);
+        if (input != null) {
+            String line;
+            while ((line = input.readLine()) != null) {
+                response.append(line);
+            }
+            input.close();
+        } else {
+            response.append("No input stream from reader.");
         }
-        input.close();
 
         System.out.println("Response code: " + responseCode);
         System.out.println(response.toString());

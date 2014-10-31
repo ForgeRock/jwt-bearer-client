@@ -7,34 +7,20 @@ with client_id: `jwt-bearer-client`, client_secret: `password`,
 and Client JWT Bearer Public Key:
 
     -----BEGIN PUBLIC KEY-----
-    MIIDETCCAfmgAwIBAgIEU8SXLjANBgkqhkiG9w0BAQsFADA5MRswGQYDVQQKExJvcGVuYW0uZXhh
-    bXBsZS5jb20xGjAYBgNVBAMTEWp3dC1iZWFyZXItY2xpZW50MB4XDTE0MTAyNzExNTY1NloXDTI0
-    MTAyNDExNTY1NlowOTEbMBkGA1UEChMSb3BlbmFtLmV4YW1wbGUuY29tMRowGAYDVQQDExFqd3Qt
-    YmVhcmVyLWNsaWVudDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAID4ZZ/DIGEBr4QC
-    2uz0GYFOCUlAPanxX21aYHSvELsWyMa7DJlD+mnjaF8cPRRMkhYZFXDJo/AVcjyblyT3ntqL+2Js
-    3D7TmS6BSjkxZWsJHyhJIYEoUwwloc0kizgSm15MwBMcbnksQVN5VWiOe4y4JMbi30t6k38lM62K
-    KtaSPP6jvnW1LTmL9uiqLWz54AM6hU3NlCI3J6Rfh8waBIPAEjmHZNquOl2uGgWumzubYDFJbomL
-    SQqO58RuKVaSVMwDbmENtMYWXIKQL2xTt5XAbwEQEgJ/zskwpA2aQt1HE6de3UymOhONhRiu4rk3
-    AIEnEVbxrvy4Ik+wXg7LZVsCAwEAAaMhMB8wHQYDVR0OBBYEFIuI7ejuZTg5tJsh1XyRopGOMBcs
-    MA0GCSqGSIb3DQEBCwUAA4IBAQBM/+/tYYVIS6LvPl3mfE8V7x+VPXqj/uK6UecAbfmRTrPk1ph+
-    jjI6nmLX9ncomYALWL/JFiSXcVsZt3/412fOqjakFVS0PmK1vEPxDlav1drnVA33icy1wORRRu5/
-    qA6mwDYPAZSbm5cDVvCR7Lt6VqJ+D0V8GABFxUw9IaX6ajTqkWhldY77usvNeTD0Xc4R7OqSBrnA
-    SNCaUlJogWyzhbFlmE9Ne28j4RVpbz/EZn0oc/cHTJ6Lryzsivf4uDO1m3M3kM/MUyXc1Zv3rqBj
-    TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPhln8MgYQGvhALa7PQZ
+    gU4JSUA9qfFfbVpgdK8QuxbIxrsMmUP6aeNoXxw9FEySFhkVcMmj8BVyPJuXJPee
+    2ov7YmzcPtOZLoFKOTFlawkfKEkhgShTDCWhzSSLOBKbXkzAExxueSxBU3lVaI57
+    jLgkxuLfS3qTfyUzrYoq1pI8/qO+dbUtOYv26KotbPngAzqFTc2UIjcnpF+HzBoE
+    g8ASOYdk2q46Xa4aBa6bO5tgMUluiYtJCo7nxG4pVpJUzANuYQ20xhZcgpAvbFO3
+    lcBvARASAn/OyTCkDZpC3UcTp17dTKY6E42FGK7iuTcAgScRVvGu/LgiT7BeDstl
+    WwIDAQAB
     -----END PUBLIC KEY-----
 
 Then to use this client, pass it the OpenAM Server URL
 such as `http://openam.example.com:8080/openam`.
 
-Notice that the header and footer for the Client JWT Bearer Public Key value
-is different from the output of the Java `keytool` command.
-The `keytool` command uses
-`-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----`,
-but in the configuration you use
-`-----BEGIN PUBLIC KEY-----` and `-----END PUBLIC KEY-----`.
 
-
-## Commands Used to Create the Key Pair
+## Commands Used to Create the Key Pair & Get the Public Key
 
 The Java `keytool` command created the key pair for this sample client.
 
@@ -59,7 +45,8 @@ The Java `keytool` command created the key pair for this sample client.
     $ keytool \
      -list \
      -alias self-signed \
-     -rfc -keystore keystore.jks \
+     -rfc \
+     -keystore keystore.jks \
      -keypass changeit \
      -storepass changeit
     Alias name: self-signed
@@ -83,6 +70,20 @@ The Java `keytool` command created the key pair for this sample client.
     SNCaUlJogWyzhbFlmE9Ne28j4RVpbz/EZn0oc/cHTJ6Lryzsivf4uDO1m3M3kM/MUyXc1Zv3rqBj
     TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8
     -----END CERTIFICATE-----
+
+The `openssl x509` command helped to get the public key from the certificate.
+
+    $ keytool \
+     -exportcert \
+     -keystore keystore.jks \
+     -storepass changeit \
+     -alias self-signed \
+     -rfc \
+     -file cert.pem
+    Certificate stored in file <cert.pem>
+    
+    $ openssl x509 -pubkey -noout -in cert.pem > public.pem
+
 
 * * * * *
 
