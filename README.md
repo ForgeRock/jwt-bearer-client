@@ -20,6 +20,51 @@ Then to use this client, pass it the OpenAM Server URL
 such as `http://openam.example.com:8080/openam`.
 
 
+## Using the Sample Client
+
+After registering the client with OpenAM, build the client and try it out.
+
+    $ mvn package
+    
+    $ java -jar target/jwt-bearer-client-1.0-SNAPSHOT-jar-with-dependencies.jar 
+    Usage: OpenAM-serverUrl
+    
+    Before trying this client, configure a top-level realm OAuth 2.0 client profile
+    with client_id: jwt-bearer-client, client_secret: password,
+    and Client JWT Bearer Public Key:
+    
+    -----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPhln8MgYQGvhALa7PQZ
+    gU4JSUA9qfFfbVpgdK8QuxbIxrsMmUP6aeNoXxw9FEySFhkVcMmj8BVyPJuXJPee
+    2ov7YmzcPtOZLoFKOTFlawkfKEkhgShTDCWhzSSLOBKbXkzAExxueSxBU3lVaI57
+    jLgkxuLfS3qTfyUzrYoq1pI8/qO+dbUtOYv26KotbPngAzqFTc2UIjcnpF+HzBoE
+    g8ASOYdk2q46Xa4aBa6bO5tgMUluiYtJCo7nxG4pVpJUzANuYQ20xhZcgpAvbFO3
+    lcBvARASAn/OyTCkDZpC3UcTp17dTKY6E42FGK7iuTcAgScRVvGu/LgiT7BeDstl
+    WwIDAQAB
+    -----END PUBLIC KEY-----
+
+Then to use this client, pass it the OpenAM Server URL
+such as `http://openam.example.com:8080/openam`.
+
+    $ java -jar target/jwt-bearer-client-1.0-SNAPSHOT-jar-with-dependencies.jar \
+     http://openam.example.com:8080/openam
+      
+    POSTing the following as a JWT bearer token:
+    eyAidHlwIjogIkpXVCIsICJhbGciOiAiUlMyNTYiIH0.
+    eyAic3ViIjogImp3dC1iZWFyZXItY2xpZW50IiwgImF1ZCI6IFsgImh0dHA6Ly9vcGVuYW0u
+    ZXhhbXBsZS5jb206ODA4OC9vcGVuYW0iIF0sICJuYmYiOiAxNDE0NzQ0NTMzLCAiaXNzIjog
+    Imp3dC1iZWFyZXItY2xpZW50IiwgImV4cCI6IDE0MTQ3NDUxMzMgfQ.ZgK09uLxwloziYGTT
+    BdVPb5-1sFxVaGkXLp1ptk1Bw1UFIfo9cD2IryHi0kXFyklnOlUcWLS_EzX0iM0FFJ7w-_LL
+    P038jZvpW3Bs7IuPqmPh2qVxAm698LCiZyNYBb6icfzYUi-cOkX23_EF62URL61Fe1Q7Suy0
+    1bRTfdhCZ34JUGX9MaGBMKKDVGu9Q3gZ7dgzqVczkPnYIITx97uZ0QqfTS1XSwAo6BptwSV1
+    03Hl7GhTYTUxcF7v9BYxKekBRuFE6guTu17UyOOZjSZJbRFu_kuloXEYF8MDbgXhdlAfWCZq
+    bg2SJ3KRhBUKPE26Et1-znPDAuaKt9X8KIF3A
+    
+    Response code: 200
+    {"expires_in":600,"token_type":"Bearer","access_token":"451f1703-9ee1-42
+    09-bd45-9ee19b26d3b8"}
+
+
 ## Commands Used to Create the Key Pair & Get the Public Key
 
 The Java `keytool` command created the key pair for this sample client.
