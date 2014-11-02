@@ -19,7 +19,6 @@ package org.forgerock.openam.doc.jwt.bearer;
 import org.forgerock.json.jose.builders.JwtBuilderFactory;
 import org.forgerock.json.jose.jws.JwsAlgorithm;
 import org.forgerock.json.jose.jws.SigningManager;
-import org.forgerock.util.encode.Base64;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -37,9 +36,8 @@ import java.util.Date;
  */
 public final class Main {
 
-    private static String clientId     = "jwt-bearer-client";
-    private static String clientSecret = "password";
-    private static String serverUrl    = null;
+    private static String clientId      = "jwt-bearer-client";
+    private static String tokenEndpoint = null;
 
     /**
      * Use a JWT as a bearer token to get an OAuth 2.0 access token.
@@ -53,9 +51,10 @@ public final class Main {
             System.exit(-1);
         }
 
-        serverUrl = args[0];
+        String serverUrl = args[0];
+        tokenEndpoint = serverUrl.replaceAll("/$", "") + "/oauth2/access_token";
 
-        String jws = getJws(serverUrl);
+        String jws = getJws(tokenEndpoint);
         System.out.println("\nPOSTing the following as a JWT bearer token:\n" + jws);
         System.out.println();
 
@@ -82,14 +81,13 @@ public final class Main {
                 + "Before trying this client, "
                 + "configure a top-level realm OAuth 2.0 client profile\n"
                 + "with client_id: " + clientId + ", "
-                + "client_secret: " + clientSecret + ",\n"
                 + "and Client JWT Bearer Public Key:\n\n" + publicKey
                 + "\n\n"
                 + "Then to use this client, pass it the OpenAM Server URL\n"
                 + "such as http://openam.example.com:8080/openam";
     }
 
-    private static String getJws(String aud) {
+    private static String getJws(String tokenEndpoint) {
         Date exp = new Date(System.currentTimeMillis() + 1000 * 60 * 5);
 
         // Set not before time in the past due to issue in OpenAM 12.0.0-SNAPSHOT.
@@ -102,7 +100,7 @@ public final class Main {
                 .claims(jwtBuilderFactory.claims()
                         .iss(clientId)
                         .sub(clientId)
-                        .aud(Collections.singletonList(aud))
+                        .aud(Collections.singletonList(tokenEndpoint))
                         .exp(exp)
                         .nbf(nbf)
                         .build())
@@ -130,20 +128,22 @@ public final class Main {
     }
 
     private static void post(String idToken) throws Exception {
-        URL token = new URL(serverUrl + "/oauth2/access_token");
-        String grantType = URLEncoder.encode("urn:ietf:params:oauth:grant-type:jwt-bearer", "UTF-8");
-        String data = "grant_type=" + grantType + "&assertion=" + idToken;
+        URL token = new URL(tokenEndpoint);
 
         HttpURLConnection connection = (HttpURLConnection) token.openConnection();
 
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setDoOutput(true);
 
         // This client is of type confidential, so authentication is required
         // according to http://tools.ietf.org/html/rfc6749#section-3.2.1
-        connection.setRequestProperty("Authorization",
-                "Basic " + Base64.encode((clientId + ":" + clientSecret).getBytes()));
-        connection.setDoOutput(true);
+        String clientAssertionType =
+                URLEncoder.encode("urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "UTF-8");
+        String grantType = URLEncoder.encode("urn:ietf:params:oauth:grant-type:jwt-bearer", "UTF-8");
+        String data = "client_assertion_type=" + clientAssertionType
+                + "&client_assertion=" + idToken
+                + "&grant_type=" + grantType + "&assertion=" + idToken;
 
         DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
         dataOutputStream.writeBytes(data);

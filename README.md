@@ -3,8 +3,7 @@
 This sample client performs a POST with an JWT that it has signed.
 
 Before trying this client, configure a top-level realm OAuth 2.0 client profile
-with client_id: `jwt-bearer-client`, client_secret: `password`,
-and Client JWT Bearer Public Key:
+with client_id: `jwt-bearer-client`, and Client JWT Bearer Public Key:
 
     -----BEGIN PUBLIC KEY-----
     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPhln8MgYQGvhALa7PQZ
@@ -30,8 +29,7 @@ After registering the client with OpenAM, build the client and try it out.
     Usage: OpenAM-serverUrl
     
     Before trying this client, configure a top-level realm OAuth 2.0 client profile
-    with client_id: jwt-bearer-client, client_secret: password,
-    and Client JWT Bearer Public Key:
+    with client_id: jwt-bearer-client, and Client JWT Bearer Public Key:
     
     -----BEGIN PUBLIC KEY-----
     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPhln8MgYQGvhALa7PQZ
