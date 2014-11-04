@@ -90,9 +90,6 @@ public final class Main {
     private static String getJws(String tokenEndpoint) {
         Date exp = new Date(System.currentTimeMillis() + 1000 * 60 * 5);
 
-        // Set not before time in the past due to issue in OpenAM 12.0.0-SNAPSHOT.
-        Date nbf = new Date(System.currentTimeMillis() - 1000 * 60 * 5);
-
         JwtBuilderFactory jwtBuilderFactory = new JwtBuilderFactory();
         return jwtBuilderFactory.jws(
                 new SigningManager().newRsaSigningHandler(getPrivateKey()))
@@ -102,7 +99,6 @@ public final class Main {
                         .sub(clientId)
                         .aud(Collections.singletonList(tokenEndpoint))
                         .exp(exp)
-                        .nbf(nbf)
                         .build())
                 .build();
     }
