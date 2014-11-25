@@ -69,7 +69,7 @@ public final class Main {
     }
 
     private static String getUsage() {
-        String publicKey = "-----BEGIN CERTIFICATE-----\n"
+        String certificate = "-----BEGIN CERTIFICATE-----\n"
                 + "MIIDETCCAfmgAwIBAgIEU8SXLjANBgkqhkiG9w0BAQsFADA5MRswGQYDVQQKExJvcGVuYW0uZXhh\n"
                 + "bXBsZS5jb20xGjAYBgNVBAMTEWp3dC1iZWFyZXItY2xpZW50MB4XDTE0MTAyNzExNTY1NloXDTI0\n"
                 + "MTAyNDExNTY1NlowOTEbMBkGA1UEChMSb3BlbmFtLmV4YW1wbGUuY29tMRowGAYDVQQDExFqd3Qt\n"
@@ -89,7 +89,7 @@ public final class Main {
         return "Usage: OpenAM-serverUrl\n\n" + "Before trying this client, "
                 + "configure a top-level realm OAuth 2.0 client profile\n"
                 + "with client_id: " + clientId + ", "
-                + "and Client JWT Bearer Public Key:\n\n" + publicKey + "\n\n"
+                + "and Client JWT Bearer Public Key Certificate:\n\n" + certificate + "\n\n"
                 + "Then to use this client, pass it the OpenAM Server URL\n"
                 + "such as http://openam.example.com:8080/openam";
     }
