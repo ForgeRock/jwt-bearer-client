@@ -3,17 +3,24 @@
 This sample client performs a POST with an JWT that it has signed.
 
 Before trying this client, configure a top-level realm OAuth 2.0 client profile
-with client_id: `jwt-bearer-client`, and Client JWT Bearer Public Key:
+with client_id: `jwt-bearer-client`, and Client JWT Bearer Public Key Certificate:
 
-    -----BEGIN PUBLIC KEY-----
-    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPhln8MgYQGvhALa7PQZ
-    gU4JSUA9qfFfbVpgdK8QuxbIxrsMmUP6aeNoXxw9FEySFhkVcMmj8BVyPJuXJPee
-    2ov7YmzcPtOZLoFKOTFlawkfKEkhgShTDCWhzSSLOBKbXkzAExxueSxBU3lVaI57
-    jLgkxuLfS3qTfyUzrYoq1pI8/qO+dbUtOYv26KotbPngAzqFTc2UIjcnpF+HzBoE
-    g8ASOYdk2q46Xa4aBa6bO5tgMUluiYtJCo7nxG4pVpJUzANuYQ20xhZcgpAvbFO3
-    lcBvARASAn/OyTCkDZpC3UcTp17dTKY6E42FGK7iuTcAgScRVvGu/LgiT7BeDstl
-    WwIDAQAB
-    -----END PUBLIC KEY-----
+    -----BEGIN CERTIFICATE-----
+    MIIDETCCAfmgAwIBAgIEU8SXLjANBgkqhkiG9w0BAQsFADA5MRswGQYDVQQKExJvcGVuYW0uZXhh
+    bXBsZS5jb20xGjAYBgNVBAMTEWp3dC1iZWFyZXItY2xpZW50MB4XDTE0MTAyNzExNTY1NloXDTI0
+    MTAyNDExNTY1NlowOTEbMBkGA1UEChMSb3BlbmFtLmV4YW1wbGUuY29tMRowGAYDVQQDExFqd3Qt
+    YmVhcmVyLWNsaWVudDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAID4ZZ/DIGEBr4QC
+    2uz0GYFOCUlAPanxX21aYHSvELsWyMa7DJlD+mnjaF8cPRRMkhYZFXDJo/AVcjyblyT3ntqL+2Js
+    3D7TmS6BSjkxZWsJHyhJIYEoUwwloc0kizgSm15MwBMcbnksQVN5VWiOe4y4JMbi30t6k38lM62K
+    KtaSPP6jvnW1LTmL9uiqLWz54AM6hU3NlCI3J6Rfh8waBIPAEjmHZNquOl2uGgWumzubYDFJbomL
+    SQqO58RuKVaSVMwDbmENtMYWXIKQL2xTt5XAbwEQEgJ/zskwpA2aQt1HE6de3UymOhONhRiu4rk3
+    AIEnEVbxrvy4Ik+wXg7LZVsCAwEAAaMhMB8wHQYDVR0OBBYEFIuI7ejuZTg5tJsh1XyRopGOMBcs
+    MA0GCSqGSIb3DQEBCwUAA4IBAQBM/+/tYYVIS6LvPl3mfE8V7x+VPXqj/uK6UecAbfmRTrPk1ph+
+    jjI6nmLX9ncomYALWL/JFiSXcVsZt3/412fOqjakFVS0PmK1vEPxDlav1drnVA33icy1wORRRu5/
+    qA6mwDYPAZSbm5cDVvCR7Lt6VqJ+D0V8GABFxUw9IaX6ajTqkWhldY77usvNeTD0Xc4R7OqSBrnA
+    SNCaUlJogWyzhbFlmE9Ne28j4RVpbz/EZn0oc/cHTJ6Lryzsivf4uDO1m3M3kM/MUyXc1Zv3rqBj
+    TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8
+    -----END CERTIFICATE-----
 
 Then to use this client, pass it the OpenAM Server URL
 such as `http://openam.example.com:8080/openam`.
@@ -29,17 +36,24 @@ After registering the client with OpenAM, build the client and try it out.
     Usage: OpenAM-serverUrl
     
     Before trying this client, configure a top-level realm OAuth 2.0 client profile
-    with client_id: jwt-bearer-client, and Client JWT Bearer Public Key:
+    with client_id: jwt-bearer-client, and Client JWT Bearer Public Key Certificate:
     
-    -----BEGIN PUBLIC KEY-----
-    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPhln8MgYQGvhALa7PQZ
-    gU4JSUA9qfFfbVpgdK8QuxbIxrsMmUP6aeNoXxw9FEySFhkVcMmj8BVyPJuXJPee
-    2ov7YmzcPtOZLoFKOTFlawkfKEkhgShTDCWhzSSLOBKbXkzAExxueSxBU3lVaI57
-    jLgkxuLfS3qTfyUzrYoq1pI8/qO+dbUtOYv26KotbPngAzqFTc2UIjcnpF+HzBoE
-    g8ASOYdk2q46Xa4aBa6bO5tgMUluiYtJCo7nxG4pVpJUzANuYQ20xhZcgpAvbFO3
-    lcBvARASAn/OyTCkDZpC3UcTp17dTKY6E42FGK7iuTcAgScRVvGu/LgiT7BeDstl
-    WwIDAQAB
-    -----END PUBLIC KEY-----
+    -----BEGIN CERTIFICATE-----
+    MIIDETCCAfmgAwIBAgIEU8SXLjANBgkqhkiG9w0BAQsFADA5MRswGQYDVQQKExJvcGVuYW0uZXhh
+    bXBsZS5jb20xGjAYBgNVBAMTEWp3dC1iZWFyZXItY2xpZW50MB4XDTE0MTAyNzExNTY1NloXDTI0
+    MTAyNDExNTY1NlowOTEbMBkGA1UEChMSb3BlbmFtLmV4YW1wbGUuY29tMRowGAYDVQQDExFqd3Qt
+    YmVhcmVyLWNsaWVudDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAID4ZZ/DIGEBr4QC
+    2uz0GYFOCUlAPanxX21aYHSvELsWyMa7DJlD+mnjaF8cPRRMkhYZFXDJo/AVcjyblyT3ntqL+2Js
+    3D7TmS6BSjkxZWsJHyhJIYEoUwwloc0kizgSm15MwBMcbnksQVN5VWiOe4y4JMbi30t6k38lM62K
+    KtaSPP6jvnW1LTmL9uiqLWz54AM6hU3NlCI3J6Rfh8waBIPAEjmHZNquOl2uGgWumzubYDFJbomL
+    SQqO58RuKVaSVMwDbmENtMYWXIKQL2xTt5XAbwEQEgJ/zskwpA2aQt1HE6de3UymOhONhRiu4rk3
+    AIEnEVbxrvy4Ik+wXg7LZVsCAwEAAaMhMB8wHQYDVR0OBBYEFIuI7ejuZTg5tJsh1XyRopGOMBcs
+    MA0GCSqGSIb3DQEBCwUAA4IBAQBM/+/tYYVIS6LvPl3mfE8V7x+VPXqj/uK6UecAbfmRTrPk1ph+
+    jjI6nmLX9ncomYALWL/JFiSXcVsZt3/412fOqjakFVS0PmK1vEPxDlav1drnVA33icy1wORRRu5/
+    qA6mwDYPAZSbm5cDVvCR7Lt6VqJ+D0V8GABFxUw9IaX6ajTqkWhldY77usvNeTD0Xc4R7OqSBrnA
+    SNCaUlJogWyzhbFlmE9Ne28j4RVpbz/EZn0oc/cHTJ6Lryzsivf4uDO1m3M3kM/MUyXc1Zv3rqBj
+    TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8
+    -----END CERTIFICATE-----
 
 Then to use this client, pass it the OpenAM Server URL
 such as `http://openam.example.com:8080/openam`.
