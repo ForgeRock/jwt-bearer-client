@@ -22,6 +22,8 @@ with client_id: `jwt-bearer-client`, and Client JWT Bearer Public Key Certificat
     TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8
     -----END CERTIFICATE-----
 
+Also add a default scope to the client, such as `openid`.
+
 Then to use this client, pass it the OpenAM Server URL
 such as `http://openam.example.com:8080/openam`.
 
@@ -73,8 +75,8 @@ such as `http://openam.example.com:8080/openam`.
     bg2SJ3KRhBUKPE26Et1-znPDAuaKt9X8KIF3A
     
     Response code: 200
-    {"expires_in":600,"token_type":"Bearer","access_token":"451f1703-9ee1-42
-    09-bd45-9ee19b26d3b8"}
+    {"scope":"openid","expires_in":59,"token_type":"Bearer",
+     "access_token":"90392e8b-086c-43ee-97e8-2c6f56d33fa9"}
 
 
 ## Commands Used to Create the Key Pair & Get the Public Key
