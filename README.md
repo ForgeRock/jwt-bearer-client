@@ -2,6 +2,10 @@
 
 This sample client performs a POST with an JWT that it has signed.
 
+**Note** This sample client has been tested with OpenAM 12.0.0.
+It has, however, `-SNAPSHOT` dependencies on ForgeRock libraries. YMMV.
+
+
 Before trying this client, configure a top-level realm OAuth 2.0 client profile
 with client_id: `jwt-bearer-client`, and Client JWT Bearer Public Key Certificate:
 
@@ -33,13 +37,13 @@ such as `http://openam.example.com:8080/openam`.
 After registering the client with OpenAM, build the client and try it out.
 
     $ mvn package
-    
-    $ java -jar target/jwt-bearer-client-1.0-SNAPSHOT-jar-with-dependencies.jar 
+
+    $ java -jar target/jwt-bearer-client-1.0-SNAPSHOT-jar-with-dependencies.jar
     Usage: OpenAM-serverUrl
-    
+
     Before trying this client, configure a top-level realm OAuth 2.0 client profile
     with client_id: jwt-bearer-client, and Client JWT Bearer Public Key Certificate:
-    
+
     -----BEGIN CERTIFICATE-----
     MIIDETCCAfmgAwIBAgIEU8SXLjANBgkqhkiG9w0BAQsFADA5MRswGQYDVQQKExJvcGVuYW0uZXhh
     bXBsZS5jb20xGjAYBgNVBAMTEWp3dC1iZWFyZXItY2xpZW50MB4XDTE0MTAyNzExNTY1NloXDTI0
@@ -62,7 +66,7 @@ such as `http://openam.example.com:8080/openam`.
 
     $ java -jar target/jwt-bearer-client-1.0-SNAPSHOT-jar-with-dependencies.jar \
      http://openam.example.com:8080/openam
-      
+
     POSTing the following as a JWT bearer token:
     eyAidHlwIjogIkpXVCIsICJhbGciOiAiUlMyNTYiIH0.
     eyAic3ViIjogImp3dC1iZWFyZXItY2xpZW50IiwgImF1ZCI6IFsgImh0dHA6Ly9vcGVuYW0u
@@ -73,7 +77,7 @@ such as `http://openam.example.com:8080/openam`.
     1bRTfdhCZ34JUGX9MaGBMKKDVGu9Q3gZ7dgzqVczkPnYIITx97uZ0QqfTS1XSwAo6BptwSV1
     03Hl7GhTYTUxcF7v9BYxKekBRuFE6guTu17UyOOZjSZJbRFu_kuloXEYF8MDbgXhdlAfWCZq
     bg2SJ3KRhBUKPE26Et1-znPDAuaKt9X8KIF3A
-    
+
     Response code: 200
     {"scope":"openid","expires_in":59,"token_type":"Bearer",
      "access_token":"90392e8b-086c-43ee-97e8-2c6f56d33fa9"}
@@ -140,7 +144,7 @@ The `openssl x509` command helped to get the public key from the certificate.
      -rfc \
      -file cert.pem
     Certificate stored in file <cert.pem>
-    
+
     $ openssl x509 -pubkey -noout -in cert.pem > public.pem
 
 
