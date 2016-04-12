@@ -93,7 +93,8 @@ To add the authentication (uses default demo:changeit)
 
 ## For jwks mode
 
-For jwks_uri mode, you can use the keystore from OpenAM confighome/openam/keystore.jks. If you are replacing the current keystore then copy it into the src/resources folder or a sub-directory.
+For jwks_uri mode, you can use the keystore from OpenAM confighome/openam/keystore.jks. If you are replacing the current keystore then copy it into the src/main/resources folder or a sub-directory before rerunning mvn package.
+
 Also remember that this will take a different alias (default test). Configure the url $serverUrl/oauth2/connect/jwk_uri as the jwks_uri and also specify that you are using the jwks uri and RS256 in the oauth2 provider and client. openid should be in the scope. the private key should be used.
 authentication is always used in this mode, again using -user demo -password changeit which can be changed on the command line
 
