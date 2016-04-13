@@ -2,9 +2,11 @@
 
 This sample client performs a POST with an JWT that it has signed.
 
-**Note** This sample client has been tested with OpenAM 12.0.0.
-It has, however, `-SNAPSHOT` dependencies on ForgeRock libraries. YMMV.
+**Note** This sample client has been tested with OpenAM 13.0.0.
 
+There are two basic modes of operation pubkey (default) and jwks.
+
+For -mode pubkey 
 
 Before trying this client, configure a top-level realm OAuth 2.0 client profile
 with client_id: `jwt-bearer-client`, and Client JWT Bearer Public Key Certificate:
@@ -39,7 +41,7 @@ After registering the client with OpenAM, build the client and try it out.
     $ mvn package
 
     $ java -jar target/jwt-bearer-client-1.0-SNAPSHOT-jar-with-dependencies.jar
-    Usage: OpenAM-serverUrl
+    Usage: OpenAM-serverUrl [-mode pubkey|jwks_uri] [-authn true|false] [-clientname clientname] [-user user] [-password password] [-keystore path_to_keystore] [-keystorepass keystorepass] [-alias keystore alias] [-keypass keypassword] [-kid kid_fromjwk] [-curlout true|false]
 
     Before trying this client, configure a top-level realm OAuth 2.0 client profile
     with client_id: jwt-bearer-client, and Client JWT Bearer Public Key Certificate:
@@ -61,11 +63,13 @@ After registering the client with OpenAM, build the client and try it out.
     TeGSgcqEAd6XlGXY1+M/yIeouUTi0F1bk1rNlqJvd57Xb4CEq17tVbGBm0hkECM8
     -----END CERTIFICATE-----
 
+Depending on the scope used, you may require authentication using the -authn true flag
+
 Then to use this client, pass it the OpenAM Server URL
 such as `http://openam.example.com:8080/openam`.
 
     $ java -jar target/jwt-bearer-client-1.0-SNAPSHOT-jar-with-dependencies.jar \
-     http://openam.example.com:8080/openam
+     http://openam.example.com:8080/openam 
 
     POSTing the following as a JWT bearer token:
     eyAidHlwIjogIkpXVCIsICJhbGciOiAiUlMyNTYiIH0.
@@ -81,6 +85,29 @@ such as `http://openam.example.com:8080/openam`.
     Response code: 200
     {"scope":"openid","expires_in":59,"token_type":"Bearer",
      "access_token":"90392e8b-086c-43ee-97e8-2c6f56d33fa9"}
+
+To add the authentication (uses default demo:changeit)
+
+     $ java -jar target/jwt-bearer-client-1.0-SNAPSHOT-jar-with-dependencies.jar \
+     http://openam.example.com:8080/openam -authn true
+
+## For jwks mode
+
+For jwks_uri mode, you can use the keystore from OpenAM confighome/openam/keystore.jks. If you are replacing the current keystore then copy it into the src/main/resources folder or a sub-directory before rerunning mvn package.
+
+Also remember that this will take a different alias (default test). Configure the url $serverUrl/oauth2/connect/jwk_uri as the jwks_uri and also specify that you are using the jwks uri and RS256 in the oauth2 provider and client. openid should be in the scope. the private key should be used.
+authentication is always used in this mode, again using -user demo -password changeit which can be changed on the command line
+
+example for jwks: http://openam.example.com:18080/openam -mode jwks_uri  -keystore /jwks/keystore.jks -keystorepass changeit -alias test
+
+
+POSTing the following as a JWT bearer token including kid value:
+eyAidHlwIjogIkpXVCIsICJraWQiOiAiU3lsTEM2Tmp0MUtHUWt0RDlNdCswemNlUVNVPSIsICJhbGciOiAiUlMyNTYiIH0.eyAic3ViIjogImp3dC1iZWFyZXItY2xpZW50IiwgImF1ZCI6IFsgImh0dHA6Ly9vcGVuYW0uZXhhbXBsZS5jb206MTgwODAvb3BlbmFtL29hdXRoMi9hY2Nlc3NfdG9rZW4iIF0sICJpc3MiOiAiand0LWJlYXJlci1jbGllbnQiLCAiZXhwIjogMTQ2MDQ2MTA0MCB9.VRsTIEm4DBm_t2qkM3QcIMyTXDRAnvqHA0mxFVBPfqF8JPR_ns587dkT3DupInFTH-N1o4FdHZ6SAZwFQGGIJhSagYuVkSDAqpS1X1G42SIf3zoX139prcHtrpmH80qva6ujyDsJyNHF-GjkHpHu1qQirk3PTTKhY4kIQF_tfSk
+
+Authenticating as user:demo;endpoint:http://openam.example.com:18080/openam/json/authenticate
+Response code: 200
+Response code: 200
+{"scope":"email mail openid","expires_in":3599,"token_type":"Bearer","id_token":"eyAidHlwIjogIkpXVCIsICJhbGciOiAiUlMyNTYiLCAia2lkIjogIlN5bExDNk5qdDFLR1FrdEQ5TXQrMHpjZVFTVT0iIH0.eyAiYXV0aF90aW1lIjogMTQ2MDQ2MDc0MCwgInRva2VuTmFtZSI6ICJpZF90b2tlbiIsICJleHAiOiAxNDYwNDY0MzQwLCAic3ViIjogImRlbW8iLCAiYXpwIjogImp3dC1iZWFyZXItY2xpZW50IiwgInRva2VuVHlwZSI6ICJKV1RUb2tlbiIsICJyZWFsbSI6ICIvIiwgImlzcyI6ICJodHRwOi8vb3BlbmFtLmV4YW1wbGUuY29tOjE4MDgwL29wZW5hbS9vYXV0aDIiLCAiYXVkIjogWyAiand0LWJlYXJlci1jbGllbnQiIF0sICJvcmcuZm9yZ2Vyb2NrLm9wZW5pZGNvbm5lY3Qub3BzIjogIjQ1ZWI2NjVmLWU4ZmQtNGYzOC1hNmM2LWUxZTRlOTBiZGQxYyIsICJpYXQiOiAxNDYwNDYwNzQwIH0.I-dXcfwwQ-FVO5s06wp29ToVwW_fv6yJ9TjR4k2nMt-T2i5kz3QModv6SzbxZAL7zBMKlsi2nNGxJLOKxmzfubwWeGUxgGxSFrZorHx7DWRC3lrKqXXAIoOwLM2mfL6DTfNPRQavxbg8f5QOA22akaN4z7MxQHU22UNZ42uDP5c","access_token":"4dcd11a6-568b-4594-851e-e215084d3324"}
 
 
 ## Commands Used to Create the Key Pair & Get the Public Key
@@ -162,4 +189,4 @@ the License file at legal/CDDLv1.0.txt. If applicable, add the following below t
 Header, with the fields enclosed by brackets [] replaced by your own identifying
 information: "Portions copyright [year] [name of copyright owner]".
 
-Copyright 2014 ForgeRock AS.
+Copyright 2016 ForgeRock AS.
