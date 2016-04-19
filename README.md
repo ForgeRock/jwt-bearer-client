@@ -1,5 +1,10 @@
 # Sample JWT Bearer Client
 
+##Warning
+**This code is not supported by ForgeRock and it is your responsibility to verify that the software is suitable and safe for use.**
+
+##About
+
 This sample client performs a POST with an JWT that it has signed.
 
 **Note** This sample client has been tested with OpenAM 13.0.0.
