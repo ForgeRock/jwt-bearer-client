@@ -1,17 +1,9 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
- * License.
+ * Copyright 2014-2017 ForgeRock AS. All Rights Reserved
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
- * Copyright 2014 ForgeRock AS.
+ * Use of this code requires a commercial software license with ForgeRock AS.
+ * or with one of its affiliates. All use shall be exclusively subject
+ * to such license between the licensee and ForgeRock AS.
  */
 
 package org.forgerock.openam.doc.jwt.bearer;
@@ -19,14 +11,11 @@ package org.forgerock.openam.doc.jwt.bearer;
 import org.forgerock.json.jose.builders.JwtBuilderFactory;
 import org.forgerock.json.jose.jws.JwsAlgorithm;
 import org.forgerock.json.jose.jws.SigningManager;
-import java.security.*;
-import org.apache.commons.codec.binary.Base64;
-
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -34,7 +23,6 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.util.Collections;
 import java.util.Date;
-import java.text.MessageFormat;
 
 /**
  * Use a JWT as a bearer token to get an OAuth 2.0 access token.
