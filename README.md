@@ -1,5 +1,10 @@
 # Sample JWT Bearer Client
 
+This is one of the ForgeRock Community Projects.
+For details, see i<https://stash.forgerock.org/projects/COM/repos/about-these-projects/browse>.
+
+If you are reading this on GitHub.com, you are viewing an old version of the project.
+
 ##Warning
 **This code is not supported by ForgeRock and it is your responsibility to verify that the software is suitable and safe for use.**
 
@@ -182,16 +187,8 @@ The `openssl x509` command helped to get the public key from the certificate.
 
 * * * * *
 
-The contents of this file are subject to the terms of the Common Development and
-Distribution License (the License). You may not use this file except in compliance with the
-License.
+Copyright 2014-2017 ForgeRock AS. All Rights Reserved
 
-You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
-specific language governing permission and limitations under the License.
-
-When distributing Covered Software, include this CDDL Header Notice in each file and include
-the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
-Header, with the fields enclosed by brackets [] replaced by your own identifying
-information: "Portions copyright [year] [name of copyright owner]".
-
-Copyright 2016 ForgeRock AS.
+Use of this code requires a commercial software license with ForgeRock AS.
+or with one of its affiliates. All use shall be exclusively subject
+to such license between the licensee and ForgeRock AS.
