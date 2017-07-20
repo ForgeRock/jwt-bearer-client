@@ -3,8 +3,6 @@
 This is one of the ForgeRock Community Projects.
 For details, see i<https://stash.forgerock.org/projects/COM/repos/about-these-projects/browse>.
 
-If you are reading this on GitHub.com, you are viewing an old version of the project.
-
 ##Warning
 **This code is not supported by ForgeRock and it is your responsibility to verify that the software is suitable and safe for use.**
 
@@ -43,6 +41,33 @@ Also add a default scope to the client, such as `openid`.
 Then to use this client, pass it the OpenAM Server URL
 such as `http://openam.example.com:8080/openam`.
 
+## Building the Sample Client
+
+In order to build the client you will need to create a maven settings file in `~/.m2/settings.xml`. This should contain the following;
+
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <servers>
+        <server>
+          <username>backstage-username</username>
+          <password>artifactory-encrypted-password</password>
+          <id>forgerock-releases</id>
+        </server>
+      </servers>
+    </settings>
+
+**NOTE** You must change your username to your backstage.forgerock.com account username - not your email address. 
+You must also replace the artifactory-encrypted-password with your artifactory generated encrypted password.
+To obtain that you should;
+- login to the [ForgeRock Artifactory System](https://maven.forgerock.org) with your backstage username and password 
+- click on your username in the top right of the screeen to view your account details
+- enter your backstage password into the 'Current Password' field and click the unlock button
+- copy the encrypted password from the encrypted password field in the Authentication Settings group box
+
+
+Build using `mvn clean install`. The resulting binary may be found in the `targets` directory.
 
 ## Using the Sample Client
 
