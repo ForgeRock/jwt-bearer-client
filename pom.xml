@@ -13,30 +13,17 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-   <groupId>org.forgerock</groupId>
-   <artifactId>forgerock-parent</artifactId>
-   <version>2.0.19</version>
-  </parent>
-
   <groupId>org.forgerock.openam</groupId>
   <artifactId>jwt-bearer-client</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <repositories>
     <repository>
-      <id>forgerock-internal-releases</id>
-      <url>https://maven.forgerock.org/repo/internal-releases</url>
+      <id>forgerock-releases</id>
+      <url>https://maven.forgerock.org/repo/releases/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-    </repository>
-    <repository>
-      <id>forgerock-internal-snapshots</id>
-      <url>https://maven.forgerock.org/repo/internal-snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
     </repository>
   </repositories>
 
