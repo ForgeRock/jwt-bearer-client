@@ -20,7 +20,7 @@
   <repositories>
     <repository>
       <id>forgerock-releases</id>
-      <url>https://maven.forgerock.org/repo/releases/</url>
+      <url>https://maven.forgerock.org/artifactory/releases/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
